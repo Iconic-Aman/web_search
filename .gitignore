@@ -1,1 +1,4 @@
 instructions.md
+.env
+.env.*
+!.env.example
