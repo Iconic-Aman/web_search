@@ -51,7 +51,9 @@ def evaluate(result: dict, q: dict) -> tuple[bool, str]:
     if expect == "search" and not has_sources:
         return False, "no sources returned"
     if expect == "no_invention":
-        for phrase in ["couldn't find", "no results", "unable to", "don't know", "not find"]:
+        for phrase in ["couldn't find", "no results", "unable to", "don't know", "not find",
+                       "no reliable", "cannot find", "does not appear", "doesn't appear",
+                       "no information", "not a known", "fictional"]:
             if phrase in answer:
                 return True, "correctly admitted uncertainty"
         return False, "may have invented an answer"

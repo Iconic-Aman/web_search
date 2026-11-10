@@ -1,0 +1,22 @@
+services:
+  - type: web
+    name: search-chat-agent
+    runtime: python
+    rootDir: backend
+    buildCommand: pip install -r requirements.txt
+    startCommand: uvicorn app.main:app --host 0.0.0.0 --port $PORT
+    envVars:
+      - key: OPENROUTER_API_KEY
+        sync: false
+      - key: OPENROUTER_BASE_URL
+        sync: false
+      - key: OPENROUTER_MODEL
+        sync: false
+      - key: TAVILY_API_KEY
+        sync: false
+      - key: DATABASE_URL
+        value: /data/chat.db
+    disk:
+      name: chatdb
+      mountPath: /data
+      sizeGB: 1
