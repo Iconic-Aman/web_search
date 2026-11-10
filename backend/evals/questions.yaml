@@ -1,0 +1,107 @@
+questions:
+
+  # Fresh facts — must search and cite
+  - id: fresh_1
+    category: fresh_fact
+    question: "Who won the most recent Cricket World Cup?"
+    expect: search
+
+  - id: fresh_2
+    category: fresh_fact
+    question: "What is the current price of Bitcoin?"
+    expect: search
+
+  - id: fresh_3
+    category: fresh_fact
+    question: "What happened in the news today?"
+    expect: search
+
+  - id: fresh_4
+    category: fresh_fact
+    question: "Who is the current Prime Minister of the UK?"
+    expect: search
+
+  # Stable facts — must NOT search
+  - id: stable_1
+    category: stable_fact
+    question: "What is the capital of France?"
+    expect: no_search
+    answer_contains: "Paris"
+
+  - id: stable_2
+    category: stable_fact
+    question: "What is 144 divided by 12?"
+    expect: no_search
+    answer_contains: "12"
+
+  - id: stable_3
+    category: stable_fact
+    question: "Who wrote Romeo and Juliet?"
+    expect: no_search
+    answer_contains: "Shakespeare"
+
+  - id: stable_4
+    category: stable_fact
+    question: "What is the speed of light?"
+    expect: no_search
+
+  # Memory — what (answered from question log)
+  - id: memory_what_1
+    category: memory_what
+    question: "What was my first question?"
+    expect: memory
+
+  - id: memory_what_2
+    category: memory_what
+    question: "What have I asked you so far?"
+    expect: memory
+
+  - id: memory_what_3
+    category: memory_what
+    question: "What did I ask about cricket?"
+    expect: memory
+
+  # Memory — when (answered from timestamps)
+  - id: memory_when_1
+    category: memory_when
+    question: "When did I ask about Bitcoin?"
+    expect: memory
+
+  - id: memory_when_2
+    category: memory_when
+    question: "What time did I start this conversation?"
+    expect: memory
+
+  # Follow-up
+  - id: followup_1
+    category: followup
+    question: "Tell me more about that."
+    expect: coherent
+
+  - id: followup_2
+    category: followup
+    question: "And the one before that?"
+    expect: coherent
+
+  # Unknown entity — must NOT invent
+  - id: unknown_1
+    category: unknown
+    question: "Who is Zarblax the Omnipotent?"
+    expect: no_invention
+
+  - id: unknown_2
+    category: unknown
+    question: "What is the population of Flarbostan?"
+    expect: no_invention
+
+  # Greeting — no search, instant
+  - id: greeting_1
+    category: greeting
+    question: "Hey, how are you?"
+    expect: no_search
+
+  # Multi-part — may trigger parallel searches
+  - id: multipart_1
+    category: multipart
+    question: "What are the latest news about AI and also about climate change?"
+    expect: search
