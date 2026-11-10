@@ -12,7 +12,7 @@ SNIPPET_MAX = 400
 
 
 async def _get_cache(query: str) -> list[SearchResult] | None:
-    async with await get_db() as db:
+    async with get_db() as db:
         async with db.execute(
             "SELECT results, fetched_at FROM search_cache WHERE query = ?", (query,)
         ) as cur:
@@ -26,7 +26,7 @@ async def _get_cache(query: str) -> list[SearchResult] | None:
 
 
 async def _set_cache(query: str, results: list[SearchResult]):
-    async with await get_db() as db:
+    async with get_db() as db:
         await db.execute(
             "INSERT OR REPLACE INTO search_cache (query, results, fetched_at) VALUES (?, ?, datetime('now'))",
             (query, json.dumps([r.model_dump() for r in results]))
@@ -53,3 +53,4 @@ async def run_search(query: str) -> list[SearchResult] | str:
         return results
     except Exception as e:
         return f"Search failed: {str(e)}"
+

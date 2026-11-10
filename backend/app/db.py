@@ -30,12 +30,12 @@ CREATE TABLE IF NOT EXISTS search_cache (
 )"""
 
 
-async def get_db():
-    return await aiosqlite.connect(DB_PATH)
+def get_db():
+    return aiosqlite.connect(DB_PATH)
 
 
 async def run_migrations():
-    async with await get_db() as db:
+    async with get_db() as db:
         await db.execute(CREATE_SESSIONS)
         await db.execute(CREATE_MESSAGES)
         await db.execute(CREATE_SEARCH_CACHE)
