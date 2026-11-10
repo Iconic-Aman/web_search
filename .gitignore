@@ -1,4 +1,14 @@
-instructions.mdgit
+INSTRUCTIONS.md
 .env
 .env.*
 !.env.example
+node_modules/
+__pycache__/
+*.pyc
+chat.db
+*.db-journal
+*.db-wal
+*.db-shm
+.vite/
+venv/
+.venv/

@@ -59,6 +59,7 @@ async def run_agent(messages: list[dict]):
                     e["arguments"] += tc.function.arguments or ""
 
         if finish_reason == "tool_calls" and tc_map:
+            yield {"type": "status", "status": "searching"}
             messages.append({
                 "role": "assistant", "content": None,
                 "tool_calls": [

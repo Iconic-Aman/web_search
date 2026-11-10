@@ -7,12 +7,14 @@ A chat agent with one tool — web search. Answers fast, cites sources, and reme
 ## Setup (3 commands)
 
 ```bash
+# Terminal 1: Backend
 cd backend
 cp .env.example .env        # fill in your keys
 uvicorn app.main:app --reload
-```
 
-Open `frontend/index.html` in your browser.
+# Terminal 2: Frontend (Dev)
+pnpm -C frontend dev
+# or open http://localhost:8000 directly (FastAPI serves the built frontend)
 
 ---
 

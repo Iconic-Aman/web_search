@@ -121,11 +121,19 @@ web_search/
 │   ├── .env.example
 │   └── requirements.txt
 ├── frontend/
-│   ├── index.html               # Chat UI (single page)
-│   ├── style.css                # Styles (dark theme, source chips)
-│   └── app.js                   # SSE client, session management
+│   ├── src/
+│   │   ├── components/          # Header, ChatWindow, MessageBubble, SourceChips, StatusLine, InputBar
+│   │   ├── hooks/               # useChat (SSE stream reader), useSession (localStorage + history)
+│   │   ├── lib/                 # time.js (local timezone formatting)
+│   │   ├── App.jsx              # Root chat layout
+│   │   └── main.jsx             # Entry point
+│   ├── index.html               # Vite HTML entry
+│   ├── vite.config.js           # Dev proxy to FastAPI & build outDir
+│   ├── tailwind.config.js       # Styling configuration
+│   └── package.json             # React, Vite, Tailwind, react-markdown
 ├── render.yaml                  # Render deploy config
 ├── design.md
+├── frontend-design.md
 └── README.md
 ```
 
@@ -133,17 +141,18 @@ web_search/
 
 ## 4a. Frontend Design
 
-**Goal:** Minimalist, zero build step — plain HTML + CSS + JS.
+**Goal:** Clean, responsive, single-page React + Vite + Tailwind UI (detailed in [`frontend-design.md`](./frontend-design.md)).
 
 | Concern | Approach |
 |---------|----------|
-| **Framework** | None — vanilla JS only |
-| **Styling** | Single `style.css`, dark theme |
-| **State** | `sessionId` generated with `crypto.randomUUID()` on page load |
-| **Streaming** | `fetch` + `ReadableStream` consuming SSE events |
-| **Source chips** | Rendered below each assistant message on `source` events |
-| **Timezone** | Auto-detected via `Intl.DateTimeFormat().resolvedOptions().timeZone` |
-| **No build** | Anyone can open `index.html` directly or serve via FastAPI static mount |
+| **Framework** | React 18 + Vite |
+| **Styling** | Tailwind CSS (dark theme, responsive bubbles & chips) |
+| **Markdown** | `react-markdown` for rich agent responses |
+| **State** | `useSession` (session ID in `localStorage`), `useChat` (messages & status) |
+| **Streaming** | `fetch` + `ReadableStream` consuming SSE events (`token`, `status`, `source`, `done`) |
+| **Source chips** | Numbered chips matching `[1]`, `[2]` citations below answers |
+| **Timezone** | Detected via `Intl.DateTimeFormat().resolvedOptions().timeZone` |
+| **Production** | Built to `backend/app/static`, served directly by FastAPI |
 
 **SSE events consumed by the UI:**
 
