@@ -133,6 +133,7 @@ search-chat-agent/
 | **Search** | Tavily | Built for LLMs: clean snippets, one call. Alt: Brave, Serper |
 | **Memory** | SQLite | Zero setup, easy for reviewers to run. Alt: Postgres |
 | **HTTP client** | httpx (async) | Connection reuse, timeouts |
+| **Validation** | Pydantic v2 | Request/response models, tool input schema, env config via `BaseSettings` |
 | **UI** | One static HTML page | No build step, anyone can open it |
 
 ---
@@ -150,6 +151,8 @@ search-chat-agent/
 ```
 
 **Behaviour**
+
+- Input and output are typed with Pydantic models (`WebSearchInput`, `SearchResult`).
 
 - Returns the top 5 results as `{title, url, snippet}`, each snippet trimmed to ~400 chars so the LLM prompt stays small.
 - Query is lowercased and trimmed, then checked against the cache (10 min TTL). Repeat questions skip the network.
@@ -253,8 +256,8 @@ erDiagram
 
 | Method | Path | Purpose |
 |--------|------|---------|
-| `POST` | `/chat` | Send a message, get an SSE stream (`token`, `source`, `done` events) |
-| `GET` | `/sessions/{id}/messages` | Full history with timestamps |
+| `POST` | `/chat` | Body: Pydantic `ChatRequest`. Stream: SSE (`token`, `source`, `done` events) |
+| `GET` | `/sessions/{id}/messages` | Response: list of Pydantic `MessageOut` |
 | `DELETE` | `/sessions/{id}` | Clear a session |
 | `GET` | `/health` | Health check |
 
