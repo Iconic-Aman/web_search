@@ -99,26 +99,59 @@ sequenceDiagram
 ## 4. Directory Structure
 
 ```
-search-chat-agent/
-├── app/
-│   ├── main.py              # FastAPI app, routes, SSE
-│   ├── agent.py             # Tool-calling loop (max 2 rounds)
-│   ├── context.py           # Builds prompt: summary + recent + question log
-│   ├── prompts.py           # System prompt (date, rules, citation format)
-│   ├── tools/
-│   │   └── web_search.py    # The only tool: schema + Tavily call + cache
-│   ├── memory.py            # SQLite read/write, summarisation
-│   ├── db.py                # Connection + migrations
-│   └── static/
-│       └── index.html       # Chat UI
-├── evals/
-│   ├── questions.yaml       # ~20 test questions
-│   └── run_evals.py         # Latency + correctness checks
+web_search/
+├── backend/
+│   ├── app/
+│   │   ├── routers/
+│   │   │   ├── chat.py          # POST /chat SSE stream
+│   │   │   └── sessions.py      # GET + DELETE /sessions
+│   │   ├── tools/
+│   │   │   └── web_search.py    # The only tool: Tavily + cache
+│   │   ├── agent.py             # Tool-calling loop (max 2 rounds)
+│   │   ├── config.py            # Pydantic BaseSettings (env vars)
+│   │   ├── context.py           # Builds prompt: summary + recent + question log
+│   │   ├── db.py                # SQLite connection + migrations
+│   │   ├── main.py              # FastAPI app, mounts routers
+│   │   ├── memory.py            # SQLite read/write, rolling summarisation
+│   │   ├── prompts.py           # System prompt (date, grounding rules)
+│   │   └── schemas.py           # Pydantic models: ChatRequest, MessageOut, SearchResult
+│   ├── evals/
+│   │   ├── questions.yaml       # 20 test questions across 8 categories
+│   │   └── run_evals.py         # Latency + correctness checks
+│   ├── .env.example
+│   └── requirements.txt
+├── frontend/
+│   ├── index.html               # Chat UI (single page)
+│   ├── style.css                # Styles (dark theme, source chips)
+│   └── app.js                   # SSE client, session management
+├── render.yaml                  # Render deploy config
 ├── design.md
-├── README.md
-├── requirements.txt
-└── .env.example
+└── README.md
 ```
+
+---
+
+## 4a. Frontend Design
+
+**Goal:** Minimalist, zero build step — plain HTML + CSS + JS.
+
+| Concern | Approach |
+|---------|----------|
+| **Framework** | None — vanilla JS only |
+| **Styling** | Single `style.css`, dark theme |
+| **State** | `sessionId` generated with `crypto.randomUUID()` on page load |
+| **Streaming** | `fetch` + `ReadableStream` consuming SSE events |
+| **Source chips** | Rendered below each assistant message on `source` events |
+| **Timezone** | Auto-detected via `Intl.DateTimeFormat().resolvedOptions().timeZone` |
+| **No build** | Anyone can open `index.html` directly or serve via FastAPI static mount |
+
+**SSE events consumed by the UI:**
+
+| Event type | Action |
+|------------|--------|
+| `token` | Append to current assistant bubble |
+| `source` | Render a clickable chip below the bubble |
+| `done` | Re-enable input |
 
 ---
 
