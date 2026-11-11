@@ -4,17 +4,26 @@ A chat agent with one tool — web search. Answers fast, cites sources, and reme
 
 ---
 
-## Setup (3 commands)
+## Quickstart
 
+### 1. Run Backend & Frontend (Single Server)
 ```bash
-# Terminal 1: Backend
 cd backend
-cp .env.example .env        # fill in your keys
+python -m venv venv
+# On Windows: venv\Scripts\activate | On macOS/Linux: source venv/bin/activate
+pip install -r requirements.txt
+cp .env.example .env        # add your API keys to .env
 uvicorn app.main:app --reload
+```
+Open **http://localhost:8000** in your browser (FastAPI serves the pre-built UI).
 
-# Terminal 2: Frontend (Dev)
+### 2. Frontend Development (Optional)
+If you want live hot-reloading for frontend edits:
+```bash
+pnpm -C frontend install
 pnpm -C frontend dev
-# or open http://localhost:8000 directly (FastAPI serves the built frontend)
+```
+Open **http://localhost:5173**.
 
 ---
 

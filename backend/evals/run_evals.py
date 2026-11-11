@@ -4,9 +4,10 @@ import uuid
 import yaml
 import httpx
 import json
+import os
 from pathlib import Path
 
-BASE_URL = "http://localhost:8000"
+BASE_URL = os.getenv("EVAL_BASE_URL", "http://localhost:8000")
 QUESTIONS_FILE = Path(__file__).parent / "questions.yaml"
 TIMEOUT = 30
 
